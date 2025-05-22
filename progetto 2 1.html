@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticketing System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #e9f3f2; /* Background light cyan */
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            transition: background-color 0.3s ease;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 40px auto;
+            background: linear-gradient(135deg, #ffffff, #f4f7f6);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .container:hover {
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        h2 {
+            text-align: center;
+            color: #4CAF50;
+            margin-bottom: 30px;
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 24px;
+            font-weight: 500;
+        }
+
+        /* Form elements */
+        input[type="password"],
+        select,
+        textarea,
+        button {
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input[type="password"]:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            padding: 16px;
+            border-radius: 12px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        /* Ticket List */
+        .ticket-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .ticket-list li {
+            background-color: #fff;
+            margin: 15px 0;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .ticket-list li:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .ticket-status {
+            font-weight: bold;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        .ticket-status.aperto {
+            color: #FF6347; /* Tomato red */
+        }
+
+        .ticket-status.in-lavorazione {
+            color: #FFA500; /* Orange */
+        }
+
+        .ticket-status.risolto {
+            color: #32CD32; /* Lime green */
+        }
+
+        .ticket-description {
+            max-height: 100px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            color: #555;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .ticket-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .ticket-actions button {
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .ticket-actions .reset-button {
+            background-color: #FF5733;
+            color: white;
+        }
+
+        .ticket-actions .reset-button:hover {
+            background-color: #e04a2c;
+        }
+
+        .ticket-actions .status-button {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        .ticket-actions .status-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Comment Section */
+        .comment-section {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .comment-section textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .comment-section button {
+            background-color: #32CD32;
+            color: white;
+            padding: 12px 24px;
+            font-weight: bold;
+            border-radius: 8px;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .comment-section button:hover {
+            background-color: #28a745;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 28px;
+            }
+
+            button {
+                padding: 14px;
+            }
+
+            .ticket-list li {
+                padding: 20px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Form di login per l'amministratore e per gli utenti normali -->
+    <div id="loginForm" class="container" style="max-width: 400px;">
+        <h2>Login</h2>
+        <p>Inserisci la password per accedere al sistema</p>
+        <input type="password" id="passwordInput" placeholder="Password" />
+        <button onclick="login()">Accedi</button>
+        <p id="loginError" style="color: red; display: none;">Password errata. Riprova.</p>
+    </div>
+
+    <div id="ticketingSystem" class="container" style="display: none;">
+        <h2>Ticketing System</h2>
+
+        <!-- Form per la creazione dei ticket, nascosto per l'amministratore -->
+        <div id="ticketForm" class="ticket-form">
+            <h3>Descrivi il Tuo Problema</h3>
+            <p>Compila il modulo per creare un ticket con il problema che stai riscontrando. Esamineremo la tua richiesta il prima possibile.</p>
+            <select id="ticketTitle">
+                <option value="problemi-con-il-pc">Problemi con il PC</option>
+                <option value="domande-sul-funzionamento">Domande sul funzionamento di ...</option>
+                <option value="problemi-di-stampa">Problemi di Stampa</option>
+                <option value="problemi-di-accesso">Problemi di Accesso</option>
+                <option value="problemi-di-rete">Problemi di Rete</option>
+                <option value="problemi-di-sicurezza">Problemi di Sicurezza</option>
+                <option value="problemi-di-software">Problemi di Software</option>
+            </select>
+            <textarea id="ticketDescription" placeholder="Descrivi il problema in dettaglio"></textarea>
+            <button onclick="createTicket()">Crea Ticket</button>
+        </div>
+
+        <!-- Lista dei ticket -->
+        <div class="ticket-list">
+            <h3>Ticket Creati</h3>
+            <ul id="ticketList"></ul>
+            <button id="resetButton" class="reset-button" onclick="resetTickets()">Resetta tutti i ticket</button>
+        </div>
+    </div>
+
+    <script>
+        const adminPassword = 'admin123'; // Password per l'amministratore
+        const userPassword = 'user123'; // Password per gli utenti normali
+        let isAdmin = false;
+
+        function login() {
+            const password = document.getElementById('passwordInput').value;
+            if (password === adminPassword) {
+                isAdmin = true; 
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('ticketingSystem').style.display = 'block';
+                document.getElementById('ticketForm').style.display = 'none'; // NASCONDE IL FORM
+                displayTickets();
+            } else if (password === userPassword) {
+                isAdmin = false; 
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('ticketingSystem').style.display = 'block';
+                document.getElementById('ticketForm').style.display = 'block'; // MOSTRA IL FORM
+                displayTickets();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+            }
+        }
+
+        function saveTicket(ticket) {
+            let tickets = JSON.parse(localStorage.getItem("tickets")) || [];
+            tickets.push(ticket);
+            localStorage.setItem("tickets", JSON.stringify(tickets));
+        }
+
+        function getTickets() {
+            return JSON.parse(localStorage.getItem("tickets")) || [];
+        }
+
+        function createTicket() {
+            const title = document.getElementById('ticketTitle').value;
+            const description = document.getElementById('ticketDescription').value;
+            
+            if (title && description) {
+                const newTicket = {
+                    title: title,
+                    description: description,
+                    status: 'Aperto',
+                    comment: '',
+                    createdAt: new Date().toISOString()
+                };
+                
+                saveTicket(newTicket);
+                displayTickets();
+            } else {
+                alert("Per favore, completa tutti i campi!");
+            }
+        }
+
+        function updateTicketStatus(ticket, index) {
+            let tickets = getTickets();
+            if (ticket.status === 'Aperto') {
+                ticket.status = 'In Lavorazione';
+            } else if (ticket.status === 'In Lavorazione') {
+                ticket.status = 'Risolto';
+            }
+            tickets[index] = ticket;
+            localStorage.setItem("tickets", JSON.stringify(tickets));
+
+            // Aggiorna il DOM senza ricaricare la pagina
+            const ticketList = document.getElementById('ticketList');
+            ticketList.children[index].querySelector('.ticket-status').textContent = ticket.status;
+            ticketList.children[index].querySelector('.ticket-status').className = 'ticket-status ' + ticket.status.toLowerCase();
+        }
+
+        function addComment(ticket, index) {
+            const comment = prompt("Aggiungi un commento:", ticket.comment);
+            if (comment !== null) {
+                let tickets = getTickets();
+                ticket.comment = comment;
+                tickets[index] = ticket;
+                localStorage.setItem("tickets", JSON.stringify(tickets));
+                displayTickets();
+            }
+        }
+
+        function displayTickets() {
+            const tickets = getTickets();
+            const ticketList = document.getElementById('ticketList');
+            ticketList.innerHTML = '';
+
+            tickets.forEach((ticket, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <div>
+                        <strong>${ticket.title}</strong> - <span class="ticket-status ${ticket.status.toLowerCase()}">${ticket.status}</span>
+                    </div>
+                    <div class="ticket-description">${ticket.description}</div>
+                    ${ticket.comment ? `<div><strong>Commento dell'amministratore:</strong> ${ticket.comment}</div>` : ''}
+                `;
+
+                const actionsDiv = document.createElement('div');
+                actionsDiv.classList.add('ticket-actions');
+
+                // Se l'utente è amministratore, mostra il pulsante per cambiare stato
+                if (isAdmin) {
+                    const statusButton = document.createElement('button');
+                    statusButton.innerText = ticket.status === 'Risolto' ? 'Stato Risolto' : 'Cambia Stato';
+                    statusButton.classList.add('status-button');
+                    statusButton.onclick = function() {
+                        updateTicketStatus(ticket, index);
+                        if (ticket.status === 'Risolto') {
+                            addComment(ticket, index);
+                        }
+                    };
+                    actionsDiv.appendChild(statusButton);
+
+                    const resetButton = document.createElement('button');
+                    resetButton.innerText = 'Elimina Ticket';
+                    resetButton.classList.add('reset-button');
+                    resetButton.onclick = function() {
+                        tickets.splice(index, 1);
+                        localStorage.setItem("tickets", JSON.stringify(tickets));
+                        displayTickets();
+                    };
+
+                    actionsDiv.appendChild(resetButton);
+                }
+
+                li.appendChild(actionsDiv);
+                ticketList.appendChild(li);
+            });
+
+            // Disabilita il pulsante "Resetta tutti i ticket" per gli utenti non amministratori
+            const resetButtonElement = document.getElementById('resetButton');
+            if (isAdmin) {
+                resetButtonElement.style.display = 'block';
+            } else {
+                resetButtonElement.style.display = 'none';
+            }
+        }
+
+        function resetTickets() {
+            localStorage.removeItem("tickets");
+            displayTickets();
+        }
+
+        // Funzione per aggiornare automaticamente la lista dei ticket ogni 5 secondi
+        setInterval(displayTickets, 5000);
+    </script>
+
+</body>
+</html>
